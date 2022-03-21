@@ -26,7 +26,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     id_paket: {
       type: DataTypes.INTEGER,
-      primaryKey: true},
+      primaryKey: true,
+    },
     qty: DataTypes.DOUBLE
   }, {
     sequelize,

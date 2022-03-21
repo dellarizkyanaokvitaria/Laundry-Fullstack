@@ -1,4 +1,4 @@
-const {response} = require("express")
+// const {response} = require("express")
 const express = require("express")
 const app = express()
 app.use(express.json())
@@ -35,11 +35,12 @@ app.get("/",async(request,response)=> {
 
 //endpoint new transaksi
 app.post("/",(request,response)=> {
+    let tanggal = request.body.tgl
     let newTransaksi = {
         id_member:request.body.id_member,
         tgl:request.body.tgl,
         batas_waktu:request.body.batas_waktu,
-        tgl_bayar:request.body.tgl_bayar,
+        tgl_bayar:tanggal,
         status:1,
         dibayar:request.body.dibayar,
         id_user:request.body.id_user
@@ -85,7 +86,7 @@ app.put("/:id_transaksi",async(request,response)=> {
         id_member:request.body.id_member,
         tgl:request.body.tgl,
         batas_waktu:request.body.batas_waktu,
-        tgl_bayar:request.body.tgl_bayar,
+        tgl_bayar:new Date().toISOString().split("T")[0],
         status:request.body.status,
         dibayar:request.body.dibayar,
         id_user:request.body.id_user
@@ -161,29 +162,52 @@ app.delete("/:id_transaksi",(request,response)=> {
 })
 
 //endpoint untuk mengubah status transaksi
-app.post("/status/:id_transaksi",(request,response)=> {
-    //kita tampung nilai status
-    let data = {
-        status:request.body.status
-    }
-
-    //kita tampung parameter
+app.post("/status/:id_transaksi", (request, response) => {
+    // kita tampung nilai status
+    const dibayar = request.body.dibayar
     let parameter = {
-        id_transaksi:request.params.id_transaksi
+        id_transaksi: request.params.id_transaksi
     }
 
-    //proses update status transaksi
-    transaksi.update(data,{where:parameter})
-    .then(result=> {
-        return response.json({
-            message:`Data status berhasil diubah`
-        })
-    })
-    .catch(error=> {
-        return response.json({
-            message:error.message
-        })
-    })
+    if(dibayar === 0){
+        let data = {
+            status: request.body.status,
+            dibayar: request.body.dibayar,
+        }
+        transaksi.update(data, {where: parameter})
+            .then(result => {
+                return response.json({
+                    message: `Data `,
+                    data: result
+                    
+                })
+            })
+            .catch(error => {
+                return response.json({
+                    message: error.message
+                })
+            })
+    }else{
+        let data1 = {
+            status: request.body.status,
+            dibayar: request.body.dibayar,
+            tgl_bayar: new Date().toISOString().split("T")[0]
+        }
+        transaksi.update(data1, {where: parameter})
+            .then(result => {
+                return response.json({
+                    message: `Data1 `,
+                    data: result
+                    
+                })
+            })
+            .catch(error => {
+                return response.json({
+                    message: error.message
+                })
+            })
+    }
+    
 })
 
 // endpoint untuk mengubah status pembayaran

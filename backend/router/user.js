@@ -9,10 +9,10 @@ const md5 = require("md5")
 
 //call auth
 //panggil fungsi auth -> validasi token
-const {auth} = require("./login")
+// const {auth} = require("./login")
 
 //fungsi auth dijadikan middleware
-app.use(auth)
+// app.use(auth)
 
 //middleware for allow the request from body (agar bisa membaca data yg di body)
 app.use(express.urlencoded({extended:true}))
